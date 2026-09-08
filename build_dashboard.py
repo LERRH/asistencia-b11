@@ -1,5 +1,6 @@
 """Genera docs/index.html (pagina estatica para GitHub Pages) a partir de
-asistencia.db. Se corre despues de poller.py en cada ciclo del workflow."""
+asistencia.db. Se corre despues de poller.py en cada ciclo del workflow.
+Diseno mobile-first: pensado para abrirse desde el celular."""
 import json
 import os
 
@@ -21,100 +22,92 @@ TEMPLATE = """<!doctype html>
   :root{{
     --bg:#e7e9ea; --surface:#ffffff; --surface-2:#f1f3f4; --ink:#1b2430;
     --ink-muted:#5b6572; --rule:#c9cdd1; --accent:#c96a12; --accent-ink:#2a1200;
-    --lamp-on-bg:#f4dfc4; --lamp-on-fg:#7a3d05; --lamp-on-dot:#c96a12;
-    --lamp-off-bg:#e4e6e8; --lamp-off-fg:#5b6572; --lamp-off-dot:#98a1a9;
     --focus:#2a6fb0;
   }}
   @media (prefers-color-scheme: dark){{
     :root:not([data-theme="light"]){{
       --bg:#12181f; --surface:#1a222c; --surface-2:#212b37; --ink:#e9edf1;
       --ink-muted:#93a0ad; --rule:#2d3947; --accent:#f0a93e; --accent-ink:#241505;
-      --lamp-on-bg:#3a2c14; --lamp-on-fg:#f0a93e; --lamp-on-dot:#f0a93e;
-      --lamp-off-bg:#232d38; --lamp-off-fg:#7c8a98; --lamp-off-dot:#4a5866;
       --focus:#6fb3ef;
     }}
   }}
   :root[data-theme="dark"]{{
     --bg:#12181f; --surface:#1a222c; --surface-2:#212b37; --ink:#e9edf1;
     --ink-muted:#93a0ad; --rule:#2d3947; --accent:#f0a93e; --accent-ink:#241505;
-    --lamp-on-bg:#3a2c14; --lamp-on-fg:#f0a93e; --lamp-on-dot:#f0a93e;
-    --lamp-off-bg:#232d38; --lamp-off-fg:#7c8a98; --lamp-off-dot:#4a5866;
     --focus:#6fb3ef;
   }}
   *{{box-sizing:border-box;}}
-  body{{margin:0;background:var(--bg);color:var(--ink);font-family:"Public Sans",-apple-system,Segoe UI,sans-serif;font-size:15px;line-height:1.5;}}
-  .wrap{{max-width:1040px;margin:0 auto;padding:28px 20px 64px;}}
-  header.board{{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap;padding-bottom:18px;border-bottom:2px solid var(--ink);margin-bottom:22px;}}
-  .board-id{{font-family:"IBM Plex Mono",monospace;font-size:12.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--accent);font-weight:600;margin:0 0 6px;}}
-  h1{{font-family:"Libre Franklin",sans-serif;font-weight:800;font-size:clamp(26px,4vw,34px);letter-spacing:-.01em;margin:0;text-wrap:balance;}}
-  .board-meta{{text-align:right;font-family:"IBM Plex Mono",monospace;font-size:12.5px;color:var(--ink-muted);line-height:1.6;}}
-  .board-meta strong{{color:var(--ink);font-weight:600;}}
-  .stats{{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px;}}
-  .stat{{background:var(--surface);border:1px solid var(--rule);border-radius:3px;padding:14px 16px;position:relative;}}
-  .stat::before{{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--accent);border-radius:3px 0 0 3px;}}
-  .stat-label{{font-size:11.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--ink-muted);font-weight:600;margin:0 0 6px;}}
-  .stat-value{{font-family:"Libre Franklin",sans-serif;font-weight:800;font-size:28px;font-variant-numeric:tabular-nums;}}
-  .stat-sub{{font-size:12px;color:var(--ink-muted);margin-top:2px;}}
-  .panel{{background:var(--surface);border:1px solid var(--rule);border-radius:4px;overflow:hidden;}}
-  .filters{{display:flex;flex-wrap:wrap;gap:10px;align-items:center;padding:14px 16px;background:var(--surface-2);border-bottom:1px solid var(--rule);}}
-  .filters input[type="search"],.filters select,.filters input[type="date"]{{font:inherit;font-family:"Public Sans",sans-serif;font-size:13.5px;padding:7px 10px;border:1px solid var(--rule);border-radius:3px;background:var(--surface);color:var(--ink);}}
-  .filters input[type="search"]{{width:190px;}}
-  .filters label.field{{display:flex;flex-direction:column;gap:3px;font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-muted);font-weight:600;}}
-  .seg{{display:flex;border:1px solid var(--rule);border-radius:3px;overflow:hidden;}}
-  .seg button{{font:inherit;font-family:"Public Sans",sans-serif;font-size:13px;font-weight:600;border:none;background:var(--surface);color:var(--ink-muted);padding:7px 13px;cursor:pointer;border-right:1px solid var(--rule);}}
+  body{{margin:0;background:var(--bg);color:var(--ink);font-family:"Public Sans",-apple-system,Segoe UI,sans-serif;font-size:15px;line-height:1.45;}}
+  .wrap{{max-width:480px;margin:0 auto;padding:20px 14px 48px;}}
+
+  header.board{{margin-bottom:14px;}}
+  .board-id{{font-family:"IBM Plex Mono",monospace;font-size:11.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--accent);font-weight:600;margin:0 0 4px;}}
+  h1{{font-family:"Libre Franklin",sans-serif;font-weight:800;font-size:23px;letter-spacing:-.01em;margin:0;text-wrap:balance;}}
+
+  .hero{{position:relative;overflow:hidden;background:var(--surface);border:1px solid var(--rule);border-radius:12px;padding:22px 16px 18px;text-align:center;margin-bottom:14px;}}
+  .hero::before{{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:var(--accent);}}
+  .hero-label{{margin:0 0 8px;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-muted);}}
+  .hero-value{{font-family:"Libre Franklin",sans-serif;font-weight:800;font-size:58px;line-height:1;font-variant-numeric:tabular-nums;}}
+  .hero-sub{{margin-top:9px;font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--ink-muted);}}
+  .hero-sub strong{{color:var(--ink);font-weight:600;}}
+
+  .panel{{background:var(--surface);border:1px solid var(--rule);border-radius:12px;overflow:hidden;}}
+  .tabs{{display:flex;}}
+  .tabs button{{flex:1;font:inherit;font-family:"Libre Franklin",sans-serif;font-size:14px;font-weight:700;border:none;background:var(--surface-2);color:var(--ink-muted);padding:13px 8px;cursor:pointer;}}
+  .tabs button.active{{background:var(--surface);color:var(--ink);box-shadow:inset 0 -3px 0 var(--accent);}}
+  .view[hidden]{{display:none;}}
+
+  .filters{{display:flex;flex-direction:column;gap:9px;padding:14px 16px;background:var(--surface-2);border-bottom:1px solid var(--rule);}}
+  .filters input[type="search"],.filters select{{width:100%;font:inherit;font-family:"Public Sans",sans-serif;font-size:14px;padding:10px 12px;border:1px solid var(--rule);border-radius:8px;background:var(--surface);color:var(--ink);}}
+  .seg{{display:flex;border:1px solid var(--rule);border-radius:8px;overflow:hidden;}}
+  .seg button{{flex:1;font:inherit;font-family:"Public Sans",sans-serif;font-size:13px;font-weight:600;border:none;background:var(--surface);color:var(--ink-muted);padding:9px 6px;cursor:pointer;border-right:1px solid var(--rule);}}
   .seg button:last-child{{border-right:none;}}
   .seg button.active{{background:var(--accent);color:var(--accent-ink);}}
-  .filters .count{{margin-left:auto;font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--ink-muted);}}
+  .date-row{{display:grid;grid-template-columns:1fr 1fr;gap:9px;}}
+  .date-row label{{display:flex;flex-direction:column;gap:4px;font-size:10.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-muted);font-weight:600;}}
+  .date-row input[type="date"]{{font:inherit;font-family:"Public Sans",sans-serif;font-size:13.5px;padding:9px 10px;border:1px solid var(--rule);border-radius:8px;background:var(--surface);color:var(--ink);}}
+  .count{{font-family:"IBM Plex Mono",monospace;font-size:11.5px;color:var(--ink-muted);text-align:right;}}
   input:focus-visible,select:focus-visible,button:focus-visible{{outline:2px solid var(--focus);outline-offset:1px;}}
-  .table-scroll{{max-height:60vh;overflow:auto;}}
-  table{{width:100%;border-collapse:collapse;font-size:13.5px;}}
-  thead th{{position:sticky;top:0;background:var(--surface-2);text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-muted);font-weight:600;padding:9px 14px;border-bottom:1px solid var(--rule);cursor:pointer;white-space:nowrap;}}
-  thead th:hover{{color:var(--ink);}}
-  thead th .arrow{{opacity:.5;font-size:10px;margin-left:3px;}}
-  tbody td{{padding:9px 14px;border-bottom:1px solid var(--rule);vertical-align:middle;}}
-  tbody tr:last-child td{{border-bottom:none;}}
-  tbody tr:hover{{background:var(--surface-2);}}
-  td.mono,th.mono{{font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-nums;}}
-  td.nombre{{font-weight:600;}}
-  td.grado{{color:var(--ink-muted);font-family:"IBM Plex Mono",monospace;font-size:12.5px;}}
-  .lamp{{display:inline-flex;align-items:center;gap:6px;padding:3px 9px 3px 7px;border-radius:20px;font-family:"IBM Plex Mono",monospace;font-size:11.5px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;white-space:nowrap;}}
-  .lamp .dot{{width:7px;height:7px;border-radius:50%;flex:none;}}
-  .lamp.on{{background:var(--lamp-on-bg);color:var(--lamp-on-fg);}}
-  .lamp.on .dot{{background:var(--lamp-on-dot);box-shadow:0 0 0 3px color-mix(in srgb, var(--lamp-on-dot) 25%, transparent);}}
-  .lamp.off{{background:var(--lamp-off-bg);color:var(--lamp-off-fg);}}
-  .lamp.off .dot{{background:var(--lamp-off-dot);}}
-  .empty{{padding:40px 20px;text-align:center;color:var(--ink-muted);font-size:14px;}}
-  .tabs{{display:flex;gap:4px;padding:10px 16px 0;background:var(--surface-2);border-bottom:1px solid var(--rule);}}
-  .tabs button{{font:inherit;font-family:"Libre Franklin",sans-serif;font-size:13.5px;font-weight:700;border:none;background:transparent;color:var(--ink-muted);padding:9px 14px;cursor:pointer;border-radius:4px 4px 0 0;position:relative;top:1px;}}
-  .tabs button.active{{color:var(--ink);background:var(--surface);border:1px solid var(--rule);border-bottom-color:var(--surface);}}
-  .view[hidden]{{display:none;}}
-  .rank-list{{display:flex;flex-direction:column;gap:2px;padding:12px 16px 18px;}}
-  .rank-row{{display:grid;grid-template-columns:26px 1fr auto;column-gap:12px;align-items:center;padding:8px 0;}}
-  .rank-pos{{font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--ink-muted);text-align:right;}}
+
+  .record{{padding:11px 16px;border-bottom:1px solid var(--rule);border-left:3px solid transparent;}}
+  .record.activo{{border-left-color:var(--accent);}}
+  .record-top{{display:flex;justify-content:space-between;align-items:baseline;gap:8px;}}
+  .record-nombre{{font-weight:700;font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}}
+  .record-grado{{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--ink-muted);flex:none;}}
+  .record-bottom{{display:flex;justify-content:space-between;margin-top:5px;}}
+  .record-bottom span{{font-family:"IBM Plex Mono",monospace;font-size:12.5px;color:var(--ink);font-variant-numeric:tabular-nums;}}
+  .record-bottom .tag{{display:block;font-family:"Public Sans",sans-serif;font-size:10px;text-transform:uppercase;letter-spacing:.04em;color:var(--ink-muted);font-weight:600;margin-bottom:1px;}}
+  .record-bottom .sin-salida{{color:var(--ink-muted);}}
+
+  .empty{{padding:36px 20px;text-align:center;color:var(--ink-muted);font-size:13.5px;}}
+
+  .rank-list{{display:flex;flex-direction:column;gap:2px;padding:10px 16px 16px;}}
+  .rank-row{{display:grid;grid-template-columns:22px 1fr auto;column-gap:10px;align-items:center;padding:8px 0;}}
+  .rank-pos{{font-family:"IBM Plex Mono",monospace;font-size:11.5px;color:var(--ink-muted);text-align:right;}}
   .rank-main{{min-width:0;}}
-  .rank-name-row{{display:flex;justify-content:space-between;gap:10px;font-size:13.5px;margin-bottom:4px;}}
+  .rank-name-row{{display:flex;justify-content:space-between;gap:8px;font-size:13px;margin-bottom:4px;}}
   .rank-name-row .nombre{{font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}}
-  .rank-name-row .grado{{color:var(--ink-muted);font-family:"IBM Plex Mono",monospace;font-size:12px;flex:none;}}
-  .rank-bar-track{{height:7px;border-radius:4px;background:var(--surface-2);overflow:hidden;}}
+  .rank-name-row .grado{{color:var(--ink-muted);font-family:"IBM Plex Mono",monospace;font-size:11px;flex:none;}}
+  .rank-bar-track{{height:6px;border-radius:4px;background:var(--surface-2);overflow:hidden;}}
   .rank-bar-fill{{height:100%;background:var(--accent);border-radius:4px;}}
-  .rank-hours{{font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-nums;font-size:13.5px;font-weight:600;white-space:nowrap;text-align:right;}}
-  .rank-sub{{font-size:11px;color:var(--ink-muted);text-align:right;margin-top:2px;}}
-  footer{{margin-top:16px;font-size:12px;color:var(--ink-muted);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;}}
-  footer code{{font-family:"IBM Plex Mono",monospace;background:var(--surface-2);padding:1px 5px;border-radius:3px;}}
-  @media (max-width:640px){{.stats{{grid-template-columns:repeat(2,1fr);}} .board-meta{{text-align:left;}} header.board{{flex-direction:column;align-items:flex-start;}}}}
+  .rank-hours{{font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-nums;font-size:13px;font-weight:600;white-space:nowrap;text-align:right;}}
+  .rank-sub{{font-size:10.5px;color:var(--ink-muted);text-align:right;margin-top:2px;}}
+
+  footer{{margin-top:14px;font-size:11px;color:var(--ink-muted);line-height:1.5;text-align:center;}}
 </style>
 </head>
 <body>
 <div class="wrap">
   <header class="board">
-    <div>
-      <p class="board-id">Panel operativo</p>
-      <h1>Registro de Asistencia</h1>
-    </div>
-    <div class="board-meta" id="boardMeta"></div>
+    <p class="board-id">Panel operativo</p>
+    <h1>Registro de Asistencia</h1>
   </header>
 
-  <div class="stats" id="stats"></div>
+  <div class="hero">
+    <p class="hero-label">Activos ahora</p>
+    <div class="hero-value" id="heroValue">0</div>
+    <p class="hero-sub" id="heroSub"></p>
+  </div>
 
   <div class="panel">
     <div class="tabs">
@@ -124,53 +117,38 @@ TEMPLATE = """<!doctype html>
 
     <div class="view" id="viewRegistro">
       <div class="filters">
-        <label class="field">Buscar<input type="search" id="fSearch" placeholder="Nombre o apellido..."></label>
-        <label class="field">Grado<select id="fGrado"><option value="">Todos</option></select></label>
-        <label class="field">Estado
-          <div class="seg" id="fEstado">
-            <button data-v="" class="active">Todos</button>
-            <button data-v="presente">Activo</button>
-            <button data-v="salio">Inactivo</button>
-          </div>
-        </label>
-        <label class="field">Ingreso desde<input type="date" id="fDesde"></label>
-        <label class="field">Ingreso hasta<input type="date" id="fHasta"></label>
+        <input type="search" id="fSearch" placeholder="Buscar por nombre...">
+        <select id="fGrado"><option value="">Todos los grados</option></select>
+        <div class="seg" id="fEstado">
+          <button data-v="" class="active">Todos</button>
+          <button data-v="presente">Activo</button>
+          <button data-v="salio">Inactivo</button>
+        </div>
+        <div class="date-row">
+          <label>Ingreso desde<input type="date" id="fDesde"></label>
+          <label>Ingreso hasta<input type="date" id="fHasta"></label>
+        </div>
         <span class="count" id="rowCount"></span>
       </div>
-      <div class="table-scroll">
-        <table>
-          <thead>
-            <tr>
-              <th data-k="grado">Grado<span class="arrow"></span></th>
-              <th data-k="nombre">Nombre<span class="arrow"></span></th>
-              <th class="mono" data-k="hora_ingreso_reportada">Ingreso<span class="arrow"></span></th>
-              <th class="mono" data-k="ultima_deteccion">Ultima vez visto<span class="arrow"></span></th>
-              <th class="mono" data-k="hora_salida_estimada">Salida (referencial)<span class="arrow"></span></th>
-              <th data-k="estado">Estado<span class="arrow"></span></th>
-            </tr>
-          </thead>
-          <tbody id="tbody"></tbody>
-        </table>
-        <div class="empty" id="emptyMsg" hidden>No hay registros con estos filtros.</div>
-      </div>
+      <div id="recordList"></div>
+      <div class="empty" id="emptyMsg" hidden>No hay registros con estos filtros.</div>
     </div>
 
     <div class="view" id="viewRanking" hidden>
       <div class="filters">
-        <label class="field">Desde<input type="date" id="rDesde"></label>
-        <label class="field">Hasta<input type="date" id="rHasta"></label>
+        <div class="date-row">
+          <label>Desde<input type="date" id="rDesde"></label>
+          <label>Hasta<input type="date" id="rHasta"></label>
+        </div>
         <span class="count" id="rankCount"></span>
       </div>
-      <div class="table-scroll">
-        <div class="rank-list" id="rankList"></div>
-        <div class="empty" id="rankEmpty" hidden>No hay horas registradas en este rango.</div>
-      </div>
+      <div class="rank-list" id="rankList"></div>
+      <div class="empty" id="rankEmpty" hidden>No hay horas registradas en este rango.</div>
     </div>
   </div>
 
   <footer>
-    <span>Actualizado automaticamente cada 30 min. La hora de salida es referencial (ultimo ciclo en que se detecto actividad).</span>
-    <span id="genAt"></span>
+    Actualizado automaticamente. La hora de salida es referencial (ultimo ciclo en que se detecto actividad); sin salida = sigue activo.
   </footer>
 </div>
 
@@ -191,8 +169,6 @@ function fmtLong(s){{
 }}
 function dateOnly(s){{ return s ? s.split(" ")[0] : null; }}
 
-let sortKey = "hora_ingreso_reportada";
-let sortDir = -1;
 let estadoFiltro = "";
 
 const grados = [...new Set(DATA.map(r=>r.grado))].sort();
@@ -203,21 +179,11 @@ grados.forEach(g=>{{
   fGrado.appendChild(o);
 }});
 
-function renderStats(){{
-  const activosAhora = DATA.filter(r=>r.estado==="presente").length;
-  const hoy = dateOnly(GENERATED_AT);
-  const ingresaronHoy = DATA.filter(r=>dateOnly(r.hora_ingreso_reportada)===hoy).length;
-  const rolesActivos = new Set(DATA.filter(r=>r.estado==="presente").map(r=>r.grado)).size;
-  const relevados = DATA.filter(r=>r.estado==="salio").length;
-  const stats = [
-    ["Activos ahora", activosAhora, "de " + DATA.length + " en el registro"],
-    ["Ingresaron hoy", ingresaronHoy, hoy.split("-").reverse().slice(0,2).join("/")],
-    ["Roles activos", rolesActivos, "distintos"],
-    ["Inactivos registrados", relevados, "salida referencial"],
-  ];
-  document.getElementById("stats").innerHTML = stats.map(([label,val,sub])=>`
-    <div class="stat"><p class="stat-label">${{label}}</p><div class="stat-value">${{val}}</div><div class="stat-sub">${{sub}}</div></div>
-  `).join("");
+function renderHero(){{
+  const activos = DATA.filter(r=>r.estado==="presente").length;
+  document.getElementById("heroValue").textContent = activos;
+  document.getElementById("heroSub").innerHTML =
+    `de <strong>${{DATA.length}}</strong> en el registro &middot; actualizado <strong>${{fmtLong(GENERATED_AT)}}</strong>`;
 }}
 
 function applyFilters(){{
@@ -234,29 +200,26 @@ function applyFilters(){{
     if(hasta && d > hasta) return false;
     return true;
   }});
-  rows.sort((a,b)=>{{
-    const av = a[sortKey] ?? "";
-    const bv = b[sortKey] ?? "";
-    if(av < bv) return -1*sortDir;
-    if(av > bv) return 1*sortDir;
-    return 0;
-  }});
-  const tbody = document.getElementById("tbody");
+  rows.sort((a,b)=> a.hora_ingreso_reportada < b.hora_ingreso_reportada ? 1 : -1);
+
+  const list = document.getElementById("recordList");
   const emptyMsg = document.getElementById("emptyMsg");
   document.getElementById("rowCount").textContent = rows.length + " / " + DATA.length + " registros";
-  if(rows.length === 0){{ tbody.innerHTML = ""; emptyMsg.hidden = false; return; }}
+
+  if(rows.length === 0){{ list.innerHTML = ""; emptyMsg.hidden = false; return; }}
   emptyMsg.hidden = true;
-  tbody.innerHTML = rows.map(r=>`
-    <tr>
-      <td class="grado">${{r.grado}}</td>
-      <td class="nombre">${{r.nombre}}</td>
-      <td class="mono">${{fmtDT(r.hora_ingreso_reportada)}}</td>
-      <td class="mono">${{fmtDT(r.ultima_deteccion)}}</td>
-      <td class="mono">${{fmtDT(r.hora_salida_estimada)}}</td>
-      <td>${{r.estado === "presente"
-        ? '<span class="lamp on"><span class="dot"></span>Activo</span>'
-        : '<span class="lamp off"><span class="dot"></span>Inactivo</span>'}}</td>
-    </tr>
+
+  list.innerHTML = rows.map(r=>`
+    <div class="record ${{r.estado === "presente" ? "activo" : ""}}">
+      <div class="record-top">
+        <span class="record-nombre">${{r.nombre}}</span>
+        <span class="record-grado">${{r.grado}}</span>
+      </div>
+      <div class="record-bottom">
+        <span><span class="tag">Ingreso</span>${{fmtDT(r.hora_ingreso_reportada)}}</span>
+        <span class="${{r.hora_salida_estimada ? "" : "sin-salida"}}"><span class="tag">Salida</span>${{fmtDT(r.hora_salida_estimada)}}</span>
+      </div>
+    </div>
   `).join("");
 }}
 
@@ -272,19 +235,6 @@ document.getElementById("fEstado").addEventListener("click", e=>{{
   estadoFiltro = btn.dataset.v;
   applyFilters();
 }});
-document.querySelectorAll("thead th").forEach(th=>{{
-  th.addEventListener("click", ()=>{{
-    const k = th.dataset.k;
-    if(sortKey === k){{ sortDir *= -1; }} else {{ sortKey = k; sortDir = 1; }}
-    document.querySelectorAll("thead .arrow").forEach(a=>a.textContent="");
-    th.querySelector(".arrow").textContent = sortDir === 1 ? "▲" : "▼";
-    applyFilters();
-  }});
-}});
-
-document.getElementById("boardMeta").innerHTML =
-  `Instantanea del <strong>${{fmtLong(GENERATED_AT)}}</strong><br>Se regenera sola cada 30 min`;
-document.getElementById("genAt").textContent = "Generado " + fmtLong(GENERATED_AT);
 
 function fmtHoras(h){{
   const totalMin = Math.round(h*60);
@@ -350,7 +300,7 @@ document.querySelectorAll(".tabs button").forEach(btn=>{{
 document.getElementById("rDesde").addEventListener("change", renderRanking);
 document.getElementById("rHasta").addEventListener("change", renderRanking);
 
-renderStats();
+renderHero();
 applyFilters();
 </script>
 </body>
@@ -361,8 +311,8 @@ applyFilters();
 def construir():
     with db.conectar() as conn:
         filas = conn.execute(
-            """SELECT grado, nombre, hora_ingreso_reportada, primera_deteccion,
-                      ultima_deteccion, hora_salida_estimada, estado
+            """SELECT grado, nombre, hora_ingreso_reportada, ultima_deteccion,
+                      hora_salida_estimada, estado
                FROM sesiones ORDER BY hora_ingreso_reportada DESC"""
         ).fetchall()
 
