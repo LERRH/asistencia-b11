@@ -3,13 +3,12 @@ cron/Tarea programada cada 30 minutos (proceso 'one-shot', no un loop)."""
 import asyncio
 import os
 import sys
-from datetime import datetime
-
 from dotenv import load_dotenv
 from telethon import TelegramClient
 
 import db
 from parser import parsear_reporte, es_parseo_confiable
+from tz import ahora_lima
 
 load_dotenv()
 
@@ -33,7 +32,7 @@ async def consultar_bot(client: TelegramClient) -> str:
 
 
 async def ejecutar_ciclo():
-    ahora = datetime.now()
+    ahora = ahora_lima()
     client = TelegramClient(SESSION, API_ID, API_HASH)
     await client.connect()
 

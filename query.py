@@ -5,11 +5,12 @@ Uso:
     python query.py historial [--dias N]
 """
 import sys
-from datetime import datetime, timedelta
+from datetime import timedelta
 
 from dotenv import load_dotenv
 
 import db
+from tz import ahora_lima
 
 load_dotenv()
 
@@ -32,7 +33,7 @@ def presentes():
 
 
 def historial(dias: int):
-    desde = (datetime.now() - timedelta(days=dias)).isoformat(sep=" ", timespec="seconds")
+    desde = (ahora_lima() - timedelta(days=dias)).isoformat(sep=" ", timespec="seconds")
     with db.conectar() as conn:
         filas = conn.execute(
             """SELECT compania, grado, nombre, hora_ingreso_reportada, hora_salida_estimada, estado
