@@ -16,98 +16,96 @@ TEMPLATE = """<!doctype html>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
 <title>Registro de Asistencia</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='40' fill='%23c96a12'/%3E%3C/svg%3E">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@500;700;800&family=Public+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='40' fill='%23e2231a'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap">
 <style>
   :root{{
-    --bg:#e7e9ea; --surface:#ffffff; --surface-2:#f1f3f4; --ink:#1b2430;
-    --ink-muted:#5b6572; --rule:#c9cdd1; --accent:#c96a12; --accent-ink:#2a1200;
-    --focus:#2a6fb0;
-  }}
-  @media (prefers-color-scheme: dark){{
-    :root:not([data-theme="light"]){{
-      --bg:#12181f; --surface:#1a222c; --surface-2:#212b37; --ink:#e9edf1;
-      --ink-muted:#93a0ad; --rule:#2d3947; --accent:#f0a93e; --accent-ink:#241505;
-      --focus:#6fb3ef;
-    }}
-  }}
-  :root[data-theme="dark"]{{
-    --bg:#12181f; --surface:#1a222c; --surface-2:#212b37; --ink:#e9edf1;
-    --ink-muted:#93a0ad; --rule:#2d3947; --accent:#f0a93e; --accent-ink:#241505;
-    --focus:#6fb3ef;
+    --bg:#000000; --surface:#0a0a0a; --surface-2:#141414; --rule:#2a2a2a;
+    --ink:#ffffff; --ink-muted:rgba(255,255,255,.56);
+    --accent:#e2231a; --accent-ink:#ffffff; --focus:#ff6b61;
   }}
   *{{box-sizing:border-box;}}
-  body{{margin:0;background:var(--bg);color:var(--ink);font-family:"Public Sans",-apple-system,Segoe UI,sans-serif;font-size:15px;line-height:1.45;}}
-  .wrap{{max-width:480px;margin:0 auto;padding:20px 14px 48px;}}
+  body{{margin:0;background:var(--bg);color:var(--ink);font-family:"Roboto",Arial,Helvetica,sans-serif;font-size:14px;line-height:1.4;}}
+  .wrap{{max-width:480px;margin:0 auto;padding:16px 12px 40px;}}
 
-  header.board{{margin-bottom:14px;}}
-  .board-id{{font-family:"IBM Plex Mono",monospace;font-size:11.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--accent);font-weight:600;margin:0 0 4px;}}
-  h1{{font-family:"Libre Franklin",sans-serif;font-weight:800;font-size:23px;letter-spacing:-.01em;margin:0;text-wrap:balance;}}
+  header.board{{margin-bottom:12px;}}
+  .board-row{{display:flex;align-items:center;justify-content:space-between;gap:10px;}}
+  h1{{font-family:"Roboto",Arial,sans-serif;font-weight:900;font-size:18px;letter-spacing:-.01em;margin:0;text-wrap:balance;}}
+  .chip-btn{{flex:none;font:inherit;font-family:"Roboto",Arial,sans-serif;font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;border:1px solid var(--accent);background:transparent;color:var(--accent);padding:7px 12px;border-radius:6px;cursor:pointer;}}
+  .chip-btn:active{{background:var(--accent);color:var(--accent-ink);}}
+  .badge-activos{{display:flex;align-items:center;gap:6px;font-size:11.5px;font-weight:500;color:var(--ink-muted);margin:8px 0 0;}}
+  .badge-activos .dot{{width:7px;height:7px;border-radius:50%;background:var(--accent);flex:none;}}
+  .badge-activos strong{{color:var(--ink);font-weight:700;}}
 
-  .hero{{position:relative;overflow:hidden;background:var(--surface);border:1px solid var(--rule);border-radius:12px;padding:22px 16px 18px;text-align:center;margin-bottom:14px;}}
-  .hero::before{{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:var(--accent);}}
-  .hero-label{{margin:0 0 8px;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-muted);}}
-  .hero-value{{font-family:"Libre Franklin",sans-serif;font-weight:800;font-size:58px;line-height:1;font-variant-numeric:tabular-nums;}}
-  .hero-sub{{margin-top:9px;font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--ink-muted);}}
-  .hero-sub strong{{color:var(--ink);font-weight:600;}}
-
-  .panel{{background:var(--surface);border:1px solid var(--rule);border-radius:12px;overflow:hidden;}}
+  .panel{{background:var(--surface);border:1px solid var(--rule);border-radius:8px;overflow:hidden;}}
   .tabs{{display:flex;}}
-  .tabs button{{flex:1;font:inherit;font-family:"Libre Franklin",sans-serif;font-size:14px;font-weight:700;border:none;background:var(--surface-2);color:var(--ink-muted);padding:13px 8px;cursor:pointer;}}
+  .tabs button{{flex:1;font:inherit;font-family:"Roboto",Arial,sans-serif;font-size:12.5px;font-weight:700;text-transform:uppercase;letter-spacing:.03em;border:none;background:var(--surface-2);color:var(--ink-muted);padding:11px 8px;cursor:pointer;}}
   .tabs button.active{{background:var(--surface);color:var(--ink);box-shadow:inset 0 -3px 0 var(--accent);}}
   .view[hidden]{{display:none;}}
 
-  .filters{{display:flex;flex-direction:column;gap:9px;padding:14px 16px;background:var(--surface-2);border-bottom:1px solid var(--rule);}}
-  .filters input[type="search"],.filters select{{width:100%;font:inherit;font-family:"Public Sans",sans-serif;font-size:14px;padding:10px 12px;border:1px solid var(--rule);border-radius:8px;background:var(--surface);color:var(--ink);}}
-  .seg{{display:flex;border:1px solid var(--rule);border-radius:8px;overflow:hidden;}}
-  .seg button{{flex:1;font:inherit;font-family:"Public Sans",sans-serif;font-size:13px;font-weight:600;border:none;background:var(--surface);color:var(--ink-muted);padding:9px 6px;cursor:pointer;border-right:1px solid var(--rule);}}
+  .table-meta{{display:flex;justify-content:flex-end;padding:8px 10px 0;}}
+  .table-meta span{{font-size:10px;color:var(--ink-muted);}}
+
+  .table-wrap{{overflow-x:auto;padding:6px 4px 10px;}}
+  table{{width:100%;border-collapse:collapse;table-layout:fixed;font-size:11px;}}
+  colgroup .c-grado{{width:19%;}}
+  colgroup .c-nombre{{width:41%;}}
+  colgroup .c-ingreso{{width:20%;}}
+  colgroup .c-salida{{width:20%;}}
+  thead th{{text-align:left;font-size:9px;text-transform:uppercase;letter-spacing:.03em;color:var(--ink-muted);font-weight:700;padding:6px 5px;border-bottom:1px solid var(--accent);}}
+  tbody td{{padding:6px 5px;border-bottom:1px solid var(--rule);vertical-align:top;}}
+  tbody tr:last-child td{{border-bottom:none;}}
+  td.grado{{color:var(--ink-muted);font-size:10px;line-height:1.25;}}
+  td.nombre{{font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}}
+  td.time{{font-variant-numeric:tabular-nums;font-size:10.5px;white-space:nowrap;}}
+  td.time.salida.vacia{{color:var(--ink-muted);}}
+
+  .empty{{padding:30px 16px;text-align:center;color:var(--ink-muted);font-size:12px;}}
+
+  .rank-list{{display:flex;flex-direction:column;gap:2px;padding:8px 12px 14px;}}
+  .rank-row{{display:grid;grid-template-columns:18px 1fr auto;column-gap:8px;align-items:center;padding:7px 0;border-bottom:1px solid var(--rule);}}
+  .rank-row:last-child{{border-bottom:none;}}
+  .rank-pos{{font-size:10.5px;color:var(--ink-muted);text-align:right;}}
+  .rank-main{{min-width:0;}}
+  .rank-name-row{{display:flex;justify-content:space-between;gap:6px;font-size:11.5px;margin-bottom:3px;}}
+  .rank-name-row .nombre{{font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}}
+  .rank-name-row .grado{{color:var(--ink-muted);font-size:9.5px;flex:none;}}
+  .rank-bar-track{{height:5px;border-radius:3px;background:var(--surface-2);overflow:hidden;}}
+  .rank-bar-fill{{height:100%;background:var(--accent);border-radius:3px;}}
+  .rank-hours{{font-variant-numeric:tabular-nums;font-size:11.5px;font-weight:700;white-space:nowrap;text-align:right;}}
+  .rank-sub{{font-size:9.5px;color:var(--ink-muted);text-align:right;margin-top:1px;}}
+
+  footer{{margin-top:12px;font-size:10px;color:var(--ink-muted);line-height:1.5;text-align:center;}}
+
+  .drawer-overlay{{position:fixed;inset:0;background:rgba(0,0,0,.7);opacity:0;pointer-events:none;transition:opacity .2s;z-index:40;}}
+  .drawer-overlay.open{{opacity:1;pointer-events:auto;}}
+  .drawer{{position:fixed;top:0;right:0;height:100%;width:84%;max-width:300px;background:var(--surface);border-left:1px solid var(--accent);transform:translateX(100%);transition:transform .25s ease;z-index:50;display:flex;flex-direction:column;}}
+  .drawer.open{{transform:translateX(0);}}
+  .drawer-head{{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-bottom:1px solid var(--rule);flex:none;}}
+  .drawer-head span{{font-weight:700;font-size:13px;text-transform:uppercase;letter-spacing:.04em;}}
+  .drawer-head button{{background:none;border:none;color:var(--ink);font-size:18px;line-height:1;cursor:pointer;padding:4px;}}
+  .drawer-body{{padding:14px 16px;display:flex;flex-direction:column;gap:11px;overflow-y:auto;}}
+  .drawer-body[hidden]{{display:none;}}
+  .drawer-body input[type="search"],.drawer-body select{{width:100%;font:inherit;font-family:"Roboto",Arial,sans-serif;font-size:13px;padding:9px 10px;border:1px solid var(--rule);border-radius:6px;background:var(--bg);color:var(--ink);}}
+  .seg{{display:flex;border:1px solid var(--rule);border-radius:6px;overflow:hidden;}}
+  .seg button{{flex:1;font:inherit;font-family:"Roboto",Arial,sans-serif;font-size:12px;font-weight:500;border:none;background:var(--bg);color:var(--ink-muted);padding:8px 4px;cursor:pointer;border-right:1px solid var(--rule);}}
   .seg button:last-child{{border-right:none;}}
   .seg button.active{{background:var(--accent);color:var(--accent-ink);}}
-  .date-row{{display:grid;grid-template-columns:1fr 1fr;gap:9px;}}
-  .date-row label{{display:flex;flex-direction:column;gap:4px;font-size:10.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-muted);font-weight:600;}}
-  .date-row input[type="date"]{{font:inherit;font-family:"Public Sans",sans-serif;font-size:13.5px;padding:9px 10px;border:1px solid var(--rule);border-radius:8px;background:var(--surface);color:var(--ink);}}
-  .count{{font-family:"IBM Plex Mono",monospace;font-size:11.5px;color:var(--ink-muted);text-align:right;}}
+  .date-row{{display:grid;grid-template-columns:1fr 1fr;gap:8px;}}
+  .date-row label{{display:flex;flex-direction:column;gap:4px;font-size:10px;text-transform:uppercase;letter-spacing:.04em;color:var(--ink-muted);font-weight:700;}}
+  .date-row input[type="date"]{{font:inherit;font-family:"Roboto",Arial,sans-serif;font-size:12.5px;padding:8px 8px;border:1px solid var(--rule);border-radius:6px;background:var(--bg);color:var(--ink);}}
   input:focus-visible,select:focus-visible,button:focus-visible{{outline:2px solid var(--focus);outline-offset:1px;}}
-
-  .record{{padding:11px 16px;border-bottom:1px solid var(--rule);border-left:3px solid transparent;}}
-  .record.activo{{border-left-color:var(--accent);}}
-  .record-top{{display:flex;justify-content:space-between;align-items:baseline;gap:8px;}}
-  .record-nombre{{font-weight:700;font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}}
-  .record-grado{{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--ink-muted);flex:none;}}
-  .record-bottom{{display:flex;justify-content:space-between;margin-top:5px;}}
-  .record-bottom span{{font-family:"IBM Plex Mono",monospace;font-size:12.5px;color:var(--ink);font-variant-numeric:tabular-nums;}}
-  .record-bottom .tag{{display:block;font-family:"Public Sans",sans-serif;font-size:10px;text-transform:uppercase;letter-spacing:.04em;color:var(--ink-muted);font-weight:600;margin-bottom:1px;}}
-  .record-bottom .sin-salida{{color:var(--ink-muted);}}
-
-  .empty{{padding:36px 20px;text-align:center;color:var(--ink-muted);font-size:13.5px;}}
-
-  .rank-list{{display:flex;flex-direction:column;gap:2px;padding:10px 16px 16px;}}
-  .rank-row{{display:grid;grid-template-columns:22px 1fr auto;column-gap:10px;align-items:center;padding:8px 0;}}
-  .rank-pos{{font-family:"IBM Plex Mono",monospace;font-size:11.5px;color:var(--ink-muted);text-align:right;}}
-  .rank-main{{min-width:0;}}
-  .rank-name-row{{display:flex;justify-content:space-between;gap:8px;font-size:13px;margin-bottom:4px;}}
-  .rank-name-row .nombre{{font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}}
-  .rank-name-row .grado{{color:var(--ink-muted);font-family:"IBM Plex Mono",monospace;font-size:11px;flex:none;}}
-  .rank-bar-track{{height:6px;border-radius:4px;background:var(--surface-2);overflow:hidden;}}
-  .rank-bar-fill{{height:100%;background:var(--accent);border-radius:4px;}}
-  .rank-hours{{font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-nums;font-size:13px;font-weight:600;white-space:nowrap;text-align:right;}}
-  .rank-sub{{font-size:10.5px;color:var(--ink-muted);text-align:right;margin-top:2px;}}
-
-  footer{{margin-top:14px;font-size:11px;color:var(--ink-muted);line-height:1.5;text-align:center;}}
 </style>
 </head>
 <body>
 <div class="wrap">
   <header class="board">
-    <p class="board-id">Panel operativo</p>
-    <h1>Registro de Asistencia</h1>
+    <div class="board-row">
+      <h1>Registro de Asistencia</h1>
+      <button class="chip-btn" id="btnFiltros">Filtros</button>
+    </div>
+    <p class="badge-activos"><span class="dot"></span><strong id="badgeCount">0</strong> activos ahora &middot; <span id="badgeGen"></span></p>
   </header>
-
-  <div class="hero">
-    <p class="hero-label">Activos ahora</p>
-    <div class="hero-value" id="heroValue">0</div>
-    <p class="hero-sub" id="heroSub"></p>
-  </div>
 
   <div class="panel">
     <div class="tabs">
@@ -116,32 +114,23 @@ TEMPLATE = """<!doctype html>
     </div>
 
     <div class="view" id="viewRegistro">
-      <div class="filters">
-        <input type="search" id="fSearch" placeholder="Buscar por nombre...">
-        <select id="fGrado"><option value="">Todos los grados</option></select>
-        <div class="seg" id="fEstado">
-          <button data-v="" class="active">Todos</button>
-          <button data-v="presente">Activo</button>
-          <button data-v="salio">Inactivo</button>
-        </div>
-        <div class="date-row">
-          <label>Ingreso desde<input type="date" id="fDesde"></label>
-          <label>Ingreso hasta<input type="date" id="fHasta"></label>
-        </div>
-        <span class="count" id="rowCount"></span>
+      <div class="table-meta"><span id="rowCount"></span></div>
+      <div class="table-wrap">
+        <table>
+          <colgroup>
+            <col class="c-grado"><col class="c-nombre"><col class="c-ingreso"><col class="c-salida">
+          </colgroup>
+          <thead>
+            <tr><th>Grado</th><th>Nombre</th><th>Ingreso</th><th>Salida</th></tr>
+          </thead>
+          <tbody id="tbody"></tbody>
+        </table>
       </div>
-      <div id="recordList"></div>
       <div class="empty" id="emptyMsg" hidden>No hay registros con estos filtros.</div>
     </div>
 
     <div class="view" id="viewRanking" hidden>
-      <div class="filters">
-        <div class="date-row">
-          <label>Desde<input type="date" id="rDesde"></label>
-          <label>Hasta<input type="date" id="rHasta"></label>
-        </div>
-        <span class="count" id="rankCount"></span>
-      </div>
+      <div class="table-meta"><span id="rankCount"></span></div>
       <div class="rank-list" id="rankList"></div>
       <div class="empty" id="rankEmpty" hidden>No hay horas registradas en este rango.</div>
     </div>
@@ -151,6 +140,32 @@ TEMPLATE = """<!doctype html>
     Actualizado automaticamente. La hora de salida es referencial (ultimo ciclo en que se detecto actividad); sin salida = sigue activo.
   </footer>
 </div>
+
+<div class="drawer-overlay" id="drawerOverlay"></div>
+<aside class="drawer" id="drawer">
+  <div class="drawer-head"><span>Filtros</span><button id="btnCerrarDrawer" aria-label="Cerrar">&#10005;</button></div>
+
+  <div class="drawer-body" id="drawerRegistro">
+    <input type="search" id="fSearch" placeholder="Buscar por nombre...">
+    <select id="fGrado"><option value="">Todos los grados</option></select>
+    <div class="seg" id="fEstado">
+      <button data-v="" class="active">Todos</button>
+      <button data-v="presente">Activo</button>
+      <button data-v="salio">Inactivo</button>
+    </div>
+    <div class="date-row">
+      <label>Ingreso desde<input type="date" id="fDesde"></label>
+      <label>Ingreso hasta<input type="date" id="fHasta"></label>
+    </div>
+  </div>
+
+  <div class="drawer-body" id="drawerRanking" hidden>
+    <div class="date-row">
+      <label>Desde<input type="date" id="rDesde"></label>
+      <label>Hasta<input type="date" id="rHasta"></label>
+    </div>
+  </div>
+</aside>
 
 <script>
 const DATA = {data_json};
@@ -162,14 +177,15 @@ function fmtDT(s){{
   const [y,m,day] = d.split("-");
   return `${{day}}/${{m}} ${{t.slice(0,5)}}`;
 }}
-function fmtLong(s){{
+function fmtShort(s){{
   if(!s) return "—";
   const dt = new Date(s.replace(" ","T"));
-  return dt.toLocaleString("es-PE",{{day:"numeric",month:"long",hour:"2-digit",minute:"2-digit"}});
+  return dt.toLocaleString("es-PE",{{hour:"2-digit",minute:"2-digit"}});
 }}
 function dateOnly(s){{ return s ? s.split(" ")[0] : null; }}
 
 let estadoFiltro = "";
+let tabActual = "registro";
 
 const grados = [...new Set(DATA.map(r=>r.grado))].sort();
 const fGrado = document.getElementById("fGrado");
@@ -179,11 +195,10 @@ grados.forEach(g=>{{
   fGrado.appendChild(o);
 }});
 
-function renderHero(){{
+function renderBadge(){{
   const activos = DATA.filter(r=>r.estado==="presente").length;
-  document.getElementById("heroValue").textContent = activos;
-  document.getElementById("heroSub").innerHTML =
-    `de <strong>${{DATA.length}}</strong> en el registro &middot; actualizado <strong>${{fmtLong(GENERATED_AT)}}</strong>`;
+  document.getElementById("badgeCount").textContent = activos;
+  document.getElementById("badgeGen").textContent = "actualizado " + fmtShort(GENERATED_AT);
 }}
 
 function applyFilters(){{
@@ -202,24 +217,20 @@ function applyFilters(){{
   }});
   rows.sort((a,b)=> a.hora_ingreso_reportada < b.hora_ingreso_reportada ? 1 : -1);
 
-  const list = document.getElementById("recordList");
+  const tbody = document.getElementById("tbody");
   const emptyMsg = document.getElementById("emptyMsg");
-  document.getElementById("rowCount").textContent = rows.length + " / " + DATA.length + " registros";
+  document.getElementById("rowCount").textContent = rows.length + " / " + DATA.length;
 
-  if(rows.length === 0){{ list.innerHTML = ""; emptyMsg.hidden = false; return; }}
+  if(rows.length === 0){{ tbody.innerHTML = ""; emptyMsg.hidden = false; return; }}
   emptyMsg.hidden = true;
 
-  list.innerHTML = rows.map(r=>`
-    <div class="record ${{r.estado === "presente" ? "activo" : ""}}">
-      <div class="record-top">
-        <span class="record-nombre">${{r.nombre}}</span>
-        <span class="record-grado">${{r.grado}}</span>
-      </div>
-      <div class="record-bottom">
-        <span><span class="tag">Ingreso</span>${{fmtDT(r.hora_ingreso_reportada)}}</span>
-        <span class="${{r.hora_salida_estimada ? "" : "sin-salida"}}"><span class="tag">Salida</span>${{fmtDT(r.hora_salida_estimada)}}</span>
-      </div>
-    </div>
+  tbody.innerHTML = rows.map(r=>`
+    <tr>
+      <td class="grado">${{r.grado}}</td>
+      <td class="nombre">${{r.nombre}}</td>
+      <td class="time">${{fmtDT(r.hora_ingreso_reportada)}}</td>
+      <td class="time salida ${{r.hora_salida_estimada ? "" : "vacia"}}">${{fmtDT(r.hora_salida_estimada)}}</td>
+    </tr>
   `).join("");
 }}
 
@@ -291,16 +302,30 @@ document.querySelectorAll(".tabs button").forEach(btn=>{{
   btn.addEventListener("click", ()=>{{
     document.querySelectorAll(".tabs button").forEach(b=>b.classList.remove("active"));
     btn.classList.add("active");
-    const tab = btn.dataset.tab;
-    document.getElementById("viewRegistro").hidden = tab !== "registro";
-    document.getElementById("viewRanking").hidden = tab !== "ranking";
-    if(tab === "ranking") renderRanking();
+    tabActual = btn.dataset.tab;
+    document.getElementById("viewRegistro").hidden = tabActual !== "registro";
+    document.getElementById("viewRanking").hidden = tabActual !== "ranking";
+    document.getElementById("drawerRegistro").hidden = tabActual !== "registro";
+    document.getElementById("drawerRanking").hidden = tabActual !== "ranking";
+    if(tabActual === "ranking") renderRanking();
   }});
 }});
 document.getElementById("rDesde").addEventListener("change", renderRanking);
 document.getElementById("rHasta").addEventListener("change", renderRanking);
 
-renderHero();
+function abrirDrawer(){{
+  document.getElementById("drawer").classList.add("open");
+  document.getElementById("drawerOverlay").classList.add("open");
+}}
+function cerrarDrawer(){{
+  document.getElementById("drawer").classList.remove("open");
+  document.getElementById("drawerOverlay").classList.remove("open");
+}}
+document.getElementById("btnFiltros").addEventListener("click", abrirDrawer);
+document.getElementById("btnCerrarDrawer").addEventListener("click", cerrarDrawer);
+document.getElementById("drawerOverlay").addEventListener("click", cerrarDrawer);
+
+renderBadge();
 applyFilters();
 </script>
 </body>
