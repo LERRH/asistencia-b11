@@ -1,6 +1,6 @@
 # Registro automático de asistencia B-11
 
-Consulta cada 10 minutos al bot de Telegram `@CGBVPClaudioBot` con `/quien B-11`,
+Consulta cada 30 minutos al bot de Telegram `@CGBVPClaudioBot` con `/quien B-11`,
 guarda quién ingresó y a qué hora, y marca una salida referencial (hora en la
 que una persona deja de aparecer en el reporte).
 
@@ -21,7 +21,7 @@ Corre automáticamente en **GitHub Actions** (repo privado
   - `presente`: sigue apareciendo en el último reporte.
   - `salio`: dejó de aparecer; `hora_salida_estimada` es el momento del ciclo
     en que se detectó su ausencia (es referencial, no exacta — el sistema
-    real del bot no informa la hora de salida). Margen de error: hasta ~10 min
+    real del bot no informa la hora de salida). Margen de error: hasta ~30 min
     (el intervalo entre corridas).
 - Si el bot no responde a tiempo, o el reporte no se puede parsear con
   confianza (formato inesperado, grado nuevo no reconocido, etc.), el ciclo
@@ -44,12 +44,9 @@ en el repo (Settings → Secrets and variables → Actions):
   cuenta de Telegram — por eso el repo debe quedar SIEMPRE privado.**
 - `BOT_USERNAME` (`CGBVPClaudioBot`) y `COMPANIA` (`B-11`).
 
-El cron actual es `*/10 * * * *` (cada 10 minutos). GitHub Actions no permite
-programar corridas más seguido que cada 5 minutos, y en plan gratuito de
-repos privados el límite es de ~2000 minutos de Actions al mes — a 10 min de
-intervalo se usan ~4300 min/mes, por lo que **es esperable que GitHub deje de
-correr el workflow automáticamente si se agota la cuota gratuita antes de fin
-de mes** (no cobra sin autorización explícita de método de pago).
+El cron actual es `*/30 * * * *` (cada 30 minutos): con esto se usan
+~1440 minutos de Actions al mes, dentro del límite gratuito de ~2000 min/mes
+que da GitHub en repos privados.
 
 Para reautenticar si la sesión se invalida algún día (ej. la cerraste desde
 "Dispositivos activos" de Telegram):
