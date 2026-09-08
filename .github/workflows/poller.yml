@@ -1,0 +1,50 @@
+name: Registro de asistencia B-11
+
+on:
+  schedule:
+    - cron: "*/30 * * * *"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: poller-b11
+  cancel-in-progress: false
+
+jobs:
+  poll:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Instalar dependencias
+        run: pip install -r requirements.txt
+
+      - name: Restaurar sesion de Telegram
+        run: echo "${{ secrets.TG_SESSION_B64 }}" | base64 -d > asistencia.session
+
+      - name: Consultar bot y actualizar registro
+        env:
+          TG_API_ID: ${{ secrets.TG_API_ID }}
+          TG_API_HASH: ${{ secrets.TG_API_HASH }}
+          TG_PHONE: ${{ secrets.TG_PHONE }}
+          BOT_USERNAME: ${{ secrets.BOT_USERNAME }}
+          COMPANIA: ${{ secrets.COMPANIA }}
+          TG_SESSION: asistencia
+          DB_PATH: asistencia.db
+        run: python poller.py
+
+      - name: Guardar cambios en el repositorio
+        if: always()
+        run: |
+          date -u +"%Y-%m-%d %H:%M:%S UTC" > ultima_ejecucion.txt
+          git config user.name "asistencia-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add asistencia.db ultima_ejecucion.txt
+          git diff --cached --quiet || git commit -m "Actualiza registro de asistencia"
+          git push
