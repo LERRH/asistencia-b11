@@ -84,6 +84,21 @@ TEMPLATE = """<!doctype html>
   .lamp.off{{background:var(--lamp-off-bg);color:var(--lamp-off-fg);}}
   .lamp.off .dot{{background:var(--lamp-off-dot);}}
   .empty{{padding:40px 20px;text-align:center;color:var(--ink-muted);font-size:14px;}}
+  .tabs{{display:flex;gap:4px;padding:10px 16px 0;background:var(--surface-2);border-bottom:1px solid var(--rule);}}
+  .tabs button{{font:inherit;font-family:"Libre Franklin",sans-serif;font-size:13.5px;font-weight:700;border:none;background:transparent;color:var(--ink-muted);padding:9px 14px;cursor:pointer;border-radius:4px 4px 0 0;position:relative;top:1px;}}
+  .tabs button.active{{color:var(--ink);background:var(--surface);border:1px solid var(--rule);border-bottom-color:var(--surface);}}
+  .view[hidden]{{display:none;}}
+  .rank-list{{display:flex;flex-direction:column;gap:2px;padding:12px 16px 18px;}}
+  .rank-row{{display:grid;grid-template-columns:26px 1fr auto;column-gap:12px;align-items:center;padding:8px 0;}}
+  .rank-pos{{font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--ink-muted);text-align:right;}}
+  .rank-main{{min-width:0;}}
+  .rank-name-row{{display:flex;justify-content:space-between;gap:10px;font-size:13.5px;margin-bottom:4px;}}
+  .rank-name-row .nombre{{font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}}
+  .rank-name-row .grado{{color:var(--ink-muted);font-family:"IBM Plex Mono",monospace;font-size:12px;flex:none;}}
+  .rank-bar-track{{height:7px;border-radius:4px;background:var(--surface-2);overflow:hidden;}}
+  .rank-bar-fill{{height:100%;background:var(--accent);border-radius:4px;}}
+  .rank-hours{{font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-nums;font-size:13.5px;font-weight:600;white-space:nowrap;text-align:right;}}
+  .rank-sub{{font-size:11px;color:var(--ink-muted);text-align:right;margin-top:2px;}}
   footer{{margin-top:16px;font-size:12px;color:var(--ink-muted);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;}}
   footer code{{font-family:"IBM Plex Mono",monospace;background:var(--surface-2);padding:1px 5px;border-radius:3px;}}
   @media (max-width:640px){{.stats{{grid-template-columns:repeat(2,1fr);}} .board-meta{{text-align:left;}} header.board{{flex-direction:column;align-items:flex-start;}}}}
@@ -102,35 +117,54 @@ TEMPLATE = """<!doctype html>
   <div class="stats" id="stats"></div>
 
   <div class="panel">
-    <div class="filters">
-      <label class="field">Buscar<input type="search" id="fSearch" placeholder="Nombre o apellido..."></label>
-      <label class="field">Grado<select id="fGrado"><option value="">Todos</option></select></label>
-      <label class="field">Estado
-        <div class="seg" id="fEstado">
-          <button data-v="" class="active">Todos</button>
-          <button data-v="presente">Activo</button>
-          <button data-v="salio">Inactivo</button>
-        </div>
-      </label>
-      <label class="field">Ingreso desde<input type="date" id="fDesde"></label>
-      <label class="field">Ingreso hasta<input type="date" id="fHasta"></label>
-      <span class="count" id="rowCount"></span>
+    <div class="tabs">
+      <button data-tab="registro" class="active">Registro</button>
+      <button data-tab="ranking">Ranking por horas</button>
     </div>
-    <div class="table-scroll">
-      <table>
-        <thead>
-          <tr>
-            <th data-k="grado">Grado<span class="arrow"></span></th>
-            <th data-k="nombre">Nombre<span class="arrow"></span></th>
-            <th class="mono" data-k="hora_ingreso_reportada">Ingreso<span class="arrow"></span></th>
-            <th class="mono" data-k="ultima_deteccion">Ultima vez visto<span class="arrow"></span></th>
-            <th class="mono" data-k="hora_salida_estimada">Salida (referencial)<span class="arrow"></span></th>
-            <th data-k="estado">Estado<span class="arrow"></span></th>
-          </tr>
-        </thead>
-        <tbody id="tbody"></tbody>
-      </table>
-      <div class="empty" id="emptyMsg" hidden>No hay registros con estos filtros.</div>
+
+    <div class="view" id="viewRegistro">
+      <div class="filters">
+        <label class="field">Buscar<input type="search" id="fSearch" placeholder="Nombre o apellido..."></label>
+        <label class="field">Grado<select id="fGrado"><option value="">Todos</option></select></label>
+        <label class="field">Estado
+          <div class="seg" id="fEstado">
+            <button data-v="" class="active">Todos</button>
+            <button data-v="presente">Activo</button>
+            <button data-v="salio">Inactivo</button>
+          </div>
+        </label>
+        <label class="field">Ingreso desde<input type="date" id="fDesde"></label>
+        <label class="field">Ingreso hasta<input type="date" id="fHasta"></label>
+        <span class="count" id="rowCount"></span>
+      </div>
+      <div class="table-scroll">
+        <table>
+          <thead>
+            <tr>
+              <th data-k="grado">Grado<span class="arrow"></span></th>
+              <th data-k="nombre">Nombre<span class="arrow"></span></th>
+              <th class="mono" data-k="hora_ingreso_reportada">Ingreso<span class="arrow"></span></th>
+              <th class="mono" data-k="ultima_deteccion">Ultima vez visto<span class="arrow"></span></th>
+              <th class="mono" data-k="hora_salida_estimada">Salida (referencial)<span class="arrow"></span></th>
+              <th data-k="estado">Estado<span class="arrow"></span></th>
+            </tr>
+          </thead>
+          <tbody id="tbody"></tbody>
+        </table>
+        <div class="empty" id="emptyMsg" hidden>No hay registros con estos filtros.</div>
+      </div>
+    </div>
+
+    <div class="view" id="viewRanking" hidden>
+      <div class="filters">
+        <label class="field">Desde<input type="date" id="rDesde"></label>
+        <label class="field">Hasta<input type="date" id="rHasta"></label>
+        <span class="count" id="rankCount"></span>
+      </div>
+      <div class="table-scroll">
+        <div class="rank-list" id="rankList"></div>
+        <div class="empty" id="rankEmpty" hidden>No hay horas registradas en este rango.</div>
+      </div>
     </div>
   </div>
 
@@ -251,6 +285,70 @@ document.querySelectorAll("thead th").forEach(th=>{{
 document.getElementById("boardMeta").innerHTML =
   `Instantanea del <strong>${{fmtLong(GENERATED_AT)}}</strong><br>Se regenera sola cada 30 min`;
 document.getElementById("genAt").textContent = "Generado " + fmtLong(GENERATED_AT);
+
+function fmtHoras(h){{
+  const totalMin = Math.round(h*60);
+  const hh = Math.floor(totalMin/60);
+  const mm = totalMin%60;
+  return `${{hh}}h ${{mm}}m`;
+}}
+
+function renderRanking(){{
+  const desde = document.getElementById("rDesde").value;
+  const hasta = document.getElementById("rHasta").value;
+  const acc = new Map();
+  DATA.forEach(r=>{{
+    const d = dateOnly(r.hora_ingreso_reportada);
+    if(desde && d < desde) return;
+    if(hasta && d > hasta) return;
+    const fin = r.hora_salida_estimada || r.ultima_deteccion;
+    const ini = r.hora_ingreso_reportada;
+    const horas = (new Date(fin.replace(" ","T")) - new Date(ini.replace(" ","T"))) / 3600000;
+    if(!(horas > 0)) return;
+    const prev = acc.get(r.nombre) || {{grado:r.grado, horas:0, sesiones:0}};
+    prev.horas += horas;
+    prev.sesiones += 1;
+    prev.grado = r.grado;
+    acc.set(r.nombre, prev);
+  }});
+  const rows = [...acc.entries()]
+    .map(([nombre,v])=>({{nombre:nombre, grado:v.grado, horas:v.horas, sesiones:v.sesiones}}))
+    .sort((a,b)=>b.horas-a.horas);
+
+  const rankList = document.getElementById("rankList");
+  const rankEmpty = document.getElementById("rankEmpty");
+  document.getElementById("rankCount").textContent = rows.length + " persona" + (rows.length===1?"":"s");
+
+  if(rows.length === 0){{ rankList.innerHTML=""; rankEmpty.hidden=false; return; }}
+  rankEmpty.hidden = true;
+  const max = rows[0].horas;
+  rankList.innerHTML = rows.map((r,i)=>`
+    <div class="rank-row">
+      <div class="rank-pos">${{i+1}}</div>
+      <div class="rank-main">
+        <div class="rank-name-row"><span class="nombre">${{r.nombre}}</span><span class="grado">${{r.grado}}</span></div>
+        <div class="rank-bar-track"><div class="rank-bar-fill" style="width:${{Math.max(3, r.horas/max*100)}}%"></div></div>
+      </div>
+      <div>
+        <div class="rank-hours">${{fmtHoras(r.horas)}}</div>
+        <div class="rank-sub">${{r.sesiones}} sesion${{r.sesiones===1?"":"es"}}</div>
+      </div>
+    </div>
+  `).join("");
+}}
+
+document.querySelectorAll(".tabs button").forEach(btn=>{{
+  btn.addEventListener("click", ()=>{{
+    document.querySelectorAll(".tabs button").forEach(b=>b.classList.remove("active"));
+    btn.classList.add("active");
+    const tab = btn.dataset.tab;
+    document.getElementById("viewRegistro").hidden = tab !== "registro";
+    document.getElementById("viewRanking").hidden = tab !== "ranking";
+    if(tab === "ranking") renderRanking();
+  }});
+}});
+document.getElementById("rDesde").addEventListener("change", renderRanking);
+document.getElementById("rHasta").addEventListener("change", renderRanking);
 
 renderStats();
 applyFilters();
