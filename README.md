@@ -1,22 +1,22 @@
-# Registro automático de asistencia B-11
+# Registro automático de asistencia
 
-Consulta cada 30 minutos al bot de Telegram `@CGBVPClaudioBot` con `/quien B-11`,
-guarda quién ingresó y a qué hora, y marca una salida referencial (hora en la
-que una persona deja de aparecer en el reporte).
+Consulta cada 30 minutos a un bot de Telegram de terceros con un comando de
+estado de personal, guarda quién ingresó y a qué hora, y marca una salida
+referencial (hora en la que una persona deja de aparecer en el reporte).
 
-Corre automáticamente en **GitHub Actions** (repo privado
-`LERRH/asistencia-b11`) — no depende de que ninguna PC esté encendida.
+Corre automáticamente en **GitHub Actions** — no depende de que ninguna PC
+esté encendida — y publica un panel de consulta en **GitHub Pages**.
 
 ## Cómo funciona
 
 - El bot es de terceros: no hay Bot API/token propio, así que este proyecto
-  automatiza tu **cuenta personal de Telegram** (API de cliente, vía
+  automatiza una **cuenta personal de Telegram** (API de cliente, vía
   [Telethon](https://docs.telethon.dev/)) para enviar el comando como si lo
-  escribieras tú.
+  escribiera una persona.
 - `poller.py` es un script "de un solo disparo": se conecta, pide el reporte,
   guarda los cambios en SQLite y termina. El bot responde primero con un
-  mensaje "⏳ Consultando…" y luego lo **edita** con el reporte real —
-  `poller.py` espera esa edición en vez de un mensaje nuevo.
+  mensaje intermedio de "consultando" y luego lo **edita** con el reporte
+  real — `poller.py` espera esa edición en vez de un mensaje nuevo.
 - El "estado" de cada persona vive en la tabla `sesiones`:
   - `presente`: sigue apareciendo en el último reporte.
   - `salio`: dejó de aparecer; `hora_salida_estimada` es el momento del ciclo
@@ -31,6 +31,26 @@ Corre automáticamente en **GitHub Actions** (repo privado
 - `asistencia.db` (la base de datos) se versiona en el propio repositorio: el
   workflow hace commit y push del archivo actualizado en cada corrida. Por
   eso hay que hacer `git pull` para ver los últimos datos localmente.
+- `build_dashboard.py` regenera `docs/index.html` (el panel de GitHub Pages)
+  a partir de la base de datos, en cada corrida del workflow.
+
+## Privacidad del repositorio
+
+Este repositorio es **público** (para poder usar GitHub Pages gratis). Eso
+significa que el código y `asistencia.db` (nombres y horarios del personal)
+son visibles para cualquiera que entre al repo. Mitigaciones aplicadas:
+
+- `docs/robots.txt` y una etiqueta `<meta name="robots" content="noindex">`
+  en la página piden a los buscadores que no la indexen (no es garantía
+  absoluta).
+- La página del panel no muestra el nombre del bot, del grupo/compañía ni
+  ningún término que identifique la institución.
+- El archivo de sesión de Telegram (`TG_SESSION_B64`) **nunca** se sube al
+  repo: vive únicamente como secret cifrado de GitHub Actions.
+
+Si se prefiere privacidad total, la alternativa es GitHub Pro (permite Pages
+privado) o volver a un repo privado y dejar el panel como un documento que se
+regenera manualmente en vez de una página pública.
 
 ## Despliegue: GitHub Actions
 
@@ -41,20 +61,21 @@ en el repo (Settings → Secrets and variables → Actions):
   Telegram (de https://my.telegram.org).
 - `TG_SESSION_B64` — el archivo `asistencia.session` (ya autenticado)
   codificado en base64. **Esto equivale a la llave de acceso completa a la
-  cuenta de Telegram — por eso el repo debe quedar SIEMPRE privado.**
-- `BOT_USERNAME` (`CGBVPClaudioBot`) y `COMPANIA` (`B-11`).
+  cuenta de Telegram — nunca debe aparecer en el código, solo como secret.**
+- `BOT_USERNAME` — username del bot a consultar.
+- `COMPANIA` — el identificador de grupo/compañía que se le pasa al comando.
 
 El cron actual es `*/30 * * * *` (cada 30 minutos): con esto se usan
 ~1440 minutos de Actions al mes, dentro del límite gratuito de ~2000 min/mes
-que da GitHub en repos privados.
+(los repos públicos además tienen minutos de Actions ilimitados).
 
-Para reautenticar si la sesión se invalida algún día (ej. la cerraste desde
+Para reautenticar si la sesión se invalida algún día (ej. se cerró desde
 "Dispositivos activos" de Telegram):
 1. Corre `python login.py request` y `python login.py confirm <codigo>`
    localmente (regenera `asistencia.session`).
 2. Sube el nuevo archivo como secret:
    ```
-   base64 -w0 asistencia.session | gh secret set TG_SESSION_B64 --repo LERRH/asistencia-b11
+   base64 -w0 asistencia.session | gh secret set TG_SESSION_B64 --repo <owner>/<repo>
    ```
 
 ## Setup inicial / pruebas locales
@@ -72,11 +93,12 @@ Para reautenticar si la sesión se invalida algún día (ej. la cerraste desde
    python login.py request
    python login.py confirm <codigo>
    ```
-   Si tu cuenta tiene verificación en dos pasos, corre tú mismo
+   Si la cuenta tiene verificación en dos pasos, corre directamente
    `python login.py password <tu_clave>` (esa clave no debe compartirse).
 5. Prueba manual:
    ```
    python poller.py
+   python build_dashboard.py
    python query.py presentes
    ```
 
@@ -88,10 +110,13 @@ python query.py presentes           # quién está presente ahora mismo
 python query.py historial --dias 7  # ingresos/salidas de los últimos 7 días
 ```
 
+O directamente desde el panel publicado en GitHub Pages (se actualiza solo
+cada 30 min).
+
 ## Notas
 
-- Solo se monitorea la compañía definida en `COMPANIA` (por defecto `B-11`).
-  Para monitorear otra, cambia esa variable o duplica el proyecto con otro
+- Solo se monitorea el grupo/compañía definido en `COMPANIA`. Para
+  monitorear otro, cambia esa variable o duplica el proyecto con otro
   `.env`/`DB_PATH`.
 - Revisa la pestaña **Actions** del repo para ver el historial de corridas
   (éxito/falla) y la tabla `snapshots` (columna `ok`/`error`) para detectar

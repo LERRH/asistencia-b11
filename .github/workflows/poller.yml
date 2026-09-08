@@ -1,4 +1,4 @@
-name: Registro de asistencia B-11
+name: Registro de asistencia
 
 on:
   schedule:
@@ -9,7 +9,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: poller-b11
+  group: poller-asistencia
   cancel-in-progress: false
 
 jobs:
