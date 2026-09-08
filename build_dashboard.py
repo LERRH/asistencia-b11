@@ -14,8 +14,8 @@ TEMPLATE = """<!doctype html>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
-<title>Parte de Guardia B-11</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%9A%92%3C/text%3E%3C/svg%3E">
+<title>Registro de Asistencia</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='40' fill='%23c96a12'/%3E%3C/svg%3E">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@500;700;800&family=Public+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
 <style>
   :root{{
@@ -93,8 +93,8 @@ TEMPLATE = """<!doctype html>
 <div class="wrap">
   <header class="board">
     <div>
-      <p class="board-id">&#128658; {compania} &middot; {sede}</p>
-      <h1>Parte de Guardia</h1>
+      <p class="board-id">Panel operativo</p>
+      <h1>Registro de Asistencia</h1>
     </div>
     <div class="board-meta" id="boardMeta"></div>
   </header>
@@ -108,8 +108,8 @@ TEMPLATE = """<!doctype html>
       <label class="field">Estado
         <div class="seg" id="fEstado">
           <button data-v="" class="active">Todos</button>
-          <button data-v="presente">En guardia</button>
-          <button data-v="salio">Relevado</button>
+          <button data-v="presente">Activo</button>
+          <button data-v="salio">Inactivo</button>
         </div>
       </label>
       <label class="field">Ingreso desde<input type="date" id="fDesde"></label>
@@ -135,7 +135,7 @@ TEMPLATE = """<!doctype html>
   </div>
 
   <footer>
-    <span>Fuente: <code>/quien {compania}</code> via Telegram, sondeado cada 30 min. La hora de salida es referencial (ciclo en que dejo de verse).</span>
+    <span>Actualizado automaticamente cada 30 min. La hora de salida es referencial (ultimo ciclo en que se detecto actividad).</span>
     <span id="genAt"></span>
   </footer>
 </div>
@@ -170,16 +170,16 @@ grados.forEach(g=>{{
 }});
 
 function renderStats(){{
-  const enGuardia = DATA.filter(r=>r.estado==="presente").length;
+  const activosAhora = DATA.filter(r=>r.estado==="presente").length;
   const hoy = dateOnly(GENERATED_AT);
   const ingresaronHoy = DATA.filter(r=>dateOnly(r.hora_ingreso_reportada)===hoy).length;
-  const gradosGuardia = new Set(DATA.filter(r=>r.estado==="presente").map(r=>r.grado)).size;
+  const rolesActivos = new Set(DATA.filter(r=>r.estado==="presente").map(r=>r.grado)).size;
   const relevados = DATA.filter(r=>r.estado==="salio").length;
   const stats = [
-    ["En guardia ahora", enGuardia, "de " + DATA.length + " en el registro"],
+    ["Activos ahora", activosAhora, "de " + DATA.length + " en el registro"],
     ["Ingresaron hoy", ingresaronHoy, hoy.split("-").reverse().slice(0,2).join("/")],
-    ["Grados en guardia", gradosGuardia, "distintos"],
-    ["Relevados registrados", relevados, "salida referencial"],
+    ["Roles activos", rolesActivos, "distintos"],
+    ["Inactivos registrados", relevados, "salida referencial"],
   ];
   document.getElementById("stats").innerHTML = stats.map(([label,val,sub])=>`
     <div class="stat"><p class="stat-label">${{label}}</p><div class="stat-value">${{val}}</div><div class="stat-sub">${{sub}}</div></div>
@@ -220,8 +220,8 @@ function applyFilters(){{
       <td class="mono">${{fmtDT(r.ultima_deteccion)}}</td>
       <td class="mono">${{fmtDT(r.hora_salida_estimada)}}</td>
       <td>${{r.estado === "presente"
-        ? '<span class="lamp on"><span class="dot"></span>En guardia</span>'
-        : '<span class="lamp off"><span class="dot"></span>Relevado</span>'}}</td>
+        ? '<span class="lamp on"><span class="dot"></span>Activo</span>'
+        : '<span class="lamp off"><span class="dot"></span>Inactivo</span>'}}</td>
     </tr>
   `).join("");
 }}
@@ -263,18 +263,15 @@ applyFilters();
 def construir():
     with db.conectar() as conn:
         filas = conn.execute(
-            """SELECT compania, grado, nombre, hora_ingreso_reportada, primera_deteccion,
+            """SELECT grado, nombre, hora_ingreso_reportada, primera_deteccion,
                       ultima_deteccion, hora_salida_estimada, estado
                FROM sesiones ORDER BY hora_ingreso_reportada DESC"""
         ).fetchall()
 
     registros = [dict(f) for f in filas]
-    compania = registros[0]["compania"] if registros else os.getenv("COMPANIA", "B-11")
     generado = max((r["ultima_deteccion"] for r in registros), default="")
 
     html = TEMPLATE.format(
-        compania=compania,
-        sede="Cosmopolita",
         data_json=json.dumps(registros, ensure_ascii=False),
         generated_at_json=json.dumps(generado, ensure_ascii=False),
     )

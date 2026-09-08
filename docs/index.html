@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
-<title>Parte de Guardia B-11</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%9A%92%3C/text%3E%3C/svg%3E">
+<title>Registro de Asistencia</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='40' fill='%23c96a12'/%3E%3C/svg%3E">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@500;700;800&family=Public+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
 <style>
   :root{
@@ -83,8 +83,8 @@
 <div class="wrap">
   <header class="board">
     <div>
-      <p class="board-id">&#128658; B-11 &middot; Cosmopolita</p>
-      <h1>Parte de Guardia</h1>
+      <p class="board-id">Panel operativo</p>
+      <h1>Registro de Asistencia</h1>
     </div>
     <div class="board-meta" id="boardMeta"></div>
   </header>
@@ -98,8 +98,8 @@
       <label class="field">Estado
         <div class="seg" id="fEstado">
           <button data-v="" class="active">Todos</button>
-          <button data-v="presente">En guardia</button>
-          <button data-v="salio">Relevado</button>
+          <button data-v="presente">Activo</button>
+          <button data-v="salio">Inactivo</button>
         </div>
       </label>
       <label class="field">Ingreso desde<input type="date" id="fDesde"></label>
@@ -125,13 +125,13 @@
   </div>
 
   <footer>
-    <span>Fuente: <code>/quien B-11</code> via Telegram, sondeado cada 30 min. La hora de salida es referencial (ciclo en que dejo de verse).</span>
+    <span>Actualizado automaticamente cada 30 min. La hora de salida es referencial (ultimo ciclo en que se detecto actividad).</span>
     <span id="genAt"></span>
   </footer>
 </div>
 
 <script>
-const DATA = [{"compania": "B-11", "grado": "Cap", "nombre": "ZUBIATE CANEPA, Enrique Martin", "hora_ingreso_reportada": "2026-09-08 07:43:00", "primera_deteccion": "2026-09-08 09:43:01", "ultima_deteccion": "2026-09-08 14:52:58", "hora_salida_estimada": null, "estado": "presente"}, {"compania": "B-11", "grado": "Sec", "nombre": "LAPA TALAVERANO, Paul Octavio", "hora_ingreso_reportada": "2026-09-08 07:25:00", "primera_deteccion": "2026-09-08 09:43:01", "ultima_deteccion": "2026-09-08 14:52:58", "hora_salida_estimada": null, "estado": "presente"}, {"compania": "B-11", "grado": "Sec", "nombre": "TELLO ROBLES, Rodrigo Alberto", "hora_ingreso_reportada": "2026-09-08 06:43:00", "primera_deteccion": "2026-09-08 09:43:01", "ultima_deteccion": "2026-09-08 14:52:58", "hora_salida_estimada": null, "estado": "presente"}, {"compania": "B-11", "grado": "Sec", "nombre": "CALONGE SALAZAR, Franchesca Paula", "hora_ingreso_reportada": "2026-09-07 22:29:00", "primera_deteccion": "2026-09-08 09:43:01", "ultima_deteccion": "2026-09-08 14:52:58", "hora_salida_estimada": null, "estado": "presente"}, {"compania": "B-11", "grado": "Brig", "nombre": "RAMIREZ ORTIZ, Julio Alejandro", "hora_ingreso_reportada": "2026-09-07 19:29:00", "primera_deteccion": "2026-09-08 09:43:01", "ultima_deteccion": "2026-09-08 14:52:58", "hora_salida_estimada": null, "estado": "presente"}, {"compania": "B-11", "grado": "Tnte Brig", "nombre": "OCHOA OBA, Néstor Raúl", "hora_ingreso_reportada": "2026-09-07 19:02:00", "primera_deteccion": "2026-09-08 09:43:01", "ultima_deteccion": "2026-09-08 14:52:58", "hora_salida_estimada": null, "estado": "presente"}, {"compania": "B-11", "grado": "Tnte", "nombre": "CASTILLO VASQUEZ, Juan Rafael", "hora_ingreso_reportada": "2026-09-07 13:26:00", "primera_deteccion": "2026-09-08 09:43:01", "ultima_deteccion": "2026-09-08 14:52:58", "hora_salida_estimada": null, "estado": "presente"}, {"compania": "B-11", "grado": "Brig", "nombre": "DUNKER MENENDEZ, Walter Adolfo", "hora_ingreso_reportada": "2026-09-07 07:42:00", "primera_deteccion": "2026-09-08 09:43:01", "ultima_deteccion": "2026-09-08 14:52:58", "hora_salida_estimada": null, "estado": "presente"}, {"compania": "B-11", "grado": "Brig", "nombre": "CALVO TIRADO, Franco Domenico Misael", "hora_ingreso_reportada": "2026-09-06 16:40:00", "primera_deteccion": "2026-09-08 09:43:01", "ultima_deteccion": "2026-09-08 14:52:58", "hora_salida_estimada": null, "estado": "presente"}];
+const DATA = [{"grado": "Cap", "nombre": "ZUBIATE CANEPA, Enrique Martin", "hora_ingreso_reportada": "2026-09-08 07:43:00", "primera_deteccion": "2026-09-08 09:43:01", "ultima_deteccion": "2026-09-08 14:52:58", "hora_salida_estimada": null, "estado": "presente"}, {"grado": "Sec", "nombre": "LAPA TALAVERANO, Paul Octavio", "hora_ingreso_reportada": "2026-09-08 07:25:00", "primera_deteccion": "2026-09-08 09:43:01", "ultima_deteccion": "2026-09-08 14:52:58", "hora_salida_estimada": null, "estado": "presente"}, {"grado": "Sec", "nombre": "TELLO ROBLES, Rodrigo Alberto", "hora_ingreso_reportada": "2026-09-08 06:43:00", "primera_deteccion": "2026-09-08 09:43:01", "ultima_deteccion": "2026-09-08 14:52:58", "hora_salida_estimada": null, "estado": "presente"}, {"grado": "Sec", "nombre": "CALONGE SALAZAR, Franchesca Paula", "hora_ingreso_reportada": "2026-09-07 22:29:00", "primera_deteccion": "2026-09-08 09:43:01", "ultima_deteccion": "2026-09-08 14:52:58", "hora_salida_estimada": null, "estado": "presente"}, {"grado": "Brig", "nombre": "RAMIREZ ORTIZ, Julio Alejandro", "hora_ingreso_reportada": "2026-09-07 19:29:00", "primera_deteccion": "2026-09-08 09:43:01", "ultima_deteccion": "2026-09-08 14:52:58", "hora_salida_estimada": null, "estado": "presente"}, {"grado": "Tnte Brig", "nombre": "OCHOA OBA, Néstor Raúl", "hora_ingreso_reportada": "2026-09-07 19:02:00", "primera_deteccion": "2026-09-08 09:43:01", "ultima_deteccion": "2026-09-08 14:52:58", "hora_salida_estimada": null, "estado": "presente"}, {"grado": "Tnte", "nombre": "CASTILLO VASQUEZ, Juan Rafael", "hora_ingreso_reportada": "2026-09-07 13:26:00", "primera_deteccion": "2026-09-08 09:43:01", "ultima_deteccion": "2026-09-08 14:52:58", "hora_salida_estimada": null, "estado": "presente"}, {"grado": "Brig", "nombre": "DUNKER MENENDEZ, Walter Adolfo", "hora_ingreso_reportada": "2026-09-07 07:42:00", "primera_deteccion": "2026-09-08 09:43:01", "ultima_deteccion": "2026-09-08 14:52:58", "hora_salida_estimada": null, "estado": "presente"}, {"grado": "Brig", "nombre": "CALVO TIRADO, Franco Domenico Misael", "hora_ingreso_reportada": "2026-09-06 16:40:00", "primera_deteccion": "2026-09-08 09:43:01", "ultima_deteccion": "2026-09-08 14:52:58", "hora_salida_estimada": null, "estado": "presente"}];
 const GENERATED_AT = "2026-09-08 14:52:58";
 
 function fmtDT(s){
@@ -160,16 +160,16 @@ grados.forEach(g=>{
 });
 
 function renderStats(){
-  const enGuardia = DATA.filter(r=>r.estado==="presente").length;
+  const activosAhora = DATA.filter(r=>r.estado==="presente").length;
   const hoy = dateOnly(GENERATED_AT);
   const ingresaronHoy = DATA.filter(r=>dateOnly(r.hora_ingreso_reportada)===hoy).length;
-  const gradosGuardia = new Set(DATA.filter(r=>r.estado==="presente").map(r=>r.grado)).size;
+  const rolesActivos = new Set(DATA.filter(r=>r.estado==="presente").map(r=>r.grado)).size;
   const relevados = DATA.filter(r=>r.estado==="salio").length;
   const stats = [
-    ["En guardia ahora", enGuardia, "de " + DATA.length + " en el registro"],
+    ["Activos ahora", activosAhora, "de " + DATA.length + " en el registro"],
     ["Ingresaron hoy", ingresaronHoy, hoy.split("-").reverse().slice(0,2).join("/")],
-    ["Grados en guardia", gradosGuardia, "distintos"],
-    ["Relevados registrados", relevados, "salida referencial"],
+    ["Roles activos", rolesActivos, "distintos"],
+    ["Inactivos registrados", relevados, "salida referencial"],
   ];
   document.getElementById("stats").innerHTML = stats.map(([label,val,sub])=>`
     <div class="stat"><p class="stat-label">${label}</p><div class="stat-value">${val}</div><div class="stat-sub">${sub}</div></div>
@@ -210,8 +210,8 @@ function applyFilters(){
       <td class="mono">${fmtDT(r.ultima_deteccion)}</td>
       <td class="mono">${fmtDT(r.hora_salida_estimada)}</td>
       <td>${r.estado === "presente"
-        ? '<span class="lamp on"><span class="dot"></span>En guardia</span>'
-        : '<span class="lamp off"><span class="dot"></span>Relevado</span>'}</td>
+        ? '<span class="lamp on"><span class="dot"></span>Activo</span>'
+        : '<span class="lamp off"><span class="dot"></span>Inactivo</span>'}</td>
     </tr>
   `).join("");
 }
